@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BitcoinWallet — Code Preview</title>
+  <style>
+    :root{
+      --bg:#0f1720; --panel:#0b1220; --muted:#8b98a8; --accent:#58a6ff; --code-bg:#071017; --line:#101820;
+      --keyword:#7dd3fc; --classname:#60ffa8; --string:#f0a988; --comment:#6aa95a; --number:#c3e88d;
+    }
+    [data-theme="light"]{
+      --bg:#f6f8fa; --panel:#ffffff; --muted:#6b7280; --accent:#0b66ff; --code-bg:#f3f4f6; --line:#e6eef8;
+      --keyword:#0b67a3; --classname:#0b8a66; --string:#9b4d31; --comment:#3a6b35; --number:#2a7a2a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color: #e6edf3}
+
+    /* Layout */
+    .site{max-width:1200px;margin:28px auto;padding:18px}
+    .topbar{display:flex;align-items:center;gap:14px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo .dot{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#20c997);display:inline-block}
+    h1{font-size:18px;margin:0}
+    .actions{margin-left:auto;display:flex;gap:10px}
+    .btn{background:var(--panel);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#2bd4ff);color:#071017;border:none}
+
+    .main{display:grid;grid-template-columns:260px 1fr 420px;gap:16px;margin-top:18px}
+    .panel{background:var(--panel);border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* Sidebar */
+    .files{display:flex;flex-direction:column;gap:8px}
+    .file{padding:10px;border-radius:6px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px}
+    .file.active{background:linear-gradient(90deg,rgba(88,166,255,0.12),transparent);color:var(--accent);}
+
+    /* Editor */
+    .editor{display:flex;flex-direction:column;height:560px}
+    .editor-header{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.02)}
+    .controls{margin-left:auto;display:flex;gap:8px}
+    .editor-body{display:flex;flex:1;overflow:hidden;border-radius:8px;margin-top:12px}
+
+    .line-numbers{width:56px;padding:18px;background:var(--line);color:var(--muted);text-align:right;user-select:none;overflow:auto}
+    .code-pane{flex:1;padding:18px;overflow:auto;background:var(--code-bg);font-family:Consolas, "Courier New", monospace;font-size:13px;line-height:1.55;color:#dbeafe}
+    pre{margin:0;white-space:pre-wrap}
+
+    /* Syntax classes */
+    .kw{color:var(--keyword)}
+    .cn{color:var(--classname)}
+    .st{color:var(--string)}
+    .cm{color:var(--comment)}
+    .nm{color:var(--number)}
+
+    /* Right preview */
+    .preview{display:flex;flex-direction:column;height:560px}
+    .preview .meta{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+    .preview .meta .chip{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--muted);font-size:13px}
+    .preview .content{flex:1;overflow:auto;padding:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:8px}
+
+    /* Footer */
+    .footer{margin-top:14px;color:var(--muted);font-size:13px}
+
+    /* Responsive */
+    @media (max-width:1000px){.main{grid-template-columns:1fr;}.preview{order:3}.files{order:1}}
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="site">
+    <div class="topbar">
+      <div class="logo">
+        <span class="dot"></span>
+        <div>
+          <h1>BitcoinWallet — Code Preview</h1>
+          <div style="font-size:12px;color:var(--muted)">A small website to view & download the Java file</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="toggleTheme">Toggle Theme</button>
+        <button class="btn" id="copyBtn">Copy Code</button>
+        <button class="btn primary" id="downloadBtn">Download File</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <aside class="panel">
+        <strong style="display:block;margin-bottom:8px;color:var(--muted)">Files</strong>
+        <div class="files" id="filesList">
+          <div class="file active" data-filename="BitcoinWallet.java">BitcoinWallet.java</div>
+          <div class="file" data-filename="README.md">README.md</div>
+          <div class="file" data-filename="styles.css">styles.css</div>
+        </div>
+        <div style="margin-top:12px;color:var(--muted);font-size:13px">Click a file to preview it. Use the buttons on the top-right to copy or download.</div>
+      </aside>
+
+      <section class="panel editor">
+        <div class="editor-header">
+          <div style="display:flex;gap:8px;align-items:center">
+            <span style="width:10px;height:10px;background:#ff5f56;border-radius:50%"></span>
+            <span style="width:10px;height:10px;background:#ffbd2e;border-radius:50%"></span>
+            <span style="width:10px;height:10px;background:#27c93f;border-radius:50%"></span>
+          </div>
+          <div style="margin-left:8px;color:var(--muted)">BitcoinWallet.java</div>
+
+          <div class="controls">
+            <div style="color:var(--muted);font-size:13px">Java</div>
+          </div>
+        </div>
+
+        <div class="editor-body">
+          <div class="line-numbers" id="lines"></div>
+          <div class="code-pane" id="codePane" tabindex="0" aria-label="Code viewer">
+            <!-- Code content is injected here -->
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel preview">
+        <div class="meta">
+          <div class="chip">Balance: <strong style="margin-left:6px">5438.8 BTC</strong></div>
+          <div class="chip">Wallet: <strong style="margin-left:6px">UniqueWalletAddress123</strong></div>
+        </div>
+        <div class="content" id="previewContent">
+          <h3 style="margin-top:0">Preview</h3>
+          <p style="color:var(--muted)">This pane shows a quick summary and small utilities. It does not execute Java — it only previews code and metadata. Use the download button to save the Java file to your computer.</p>
+
+          <div style="margin-top:12px">
+            <button class="btn" id="showLineNums">Toggle Line Numbers</button>
+            <button class="btn" id="minifyBtn">Minify (strip comments)</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="footer">Made for you — edit the page freely. Tip: open the browser devtools to tweak styles live.</div>
+  </div>
+
+  <script>
+    // Files content
+    const files = {
+      "BitcoinWallet.java": `public class BitcoinWallet {\n    private double balance;\n    private String walletAddress;\n\n    public BitcoinWallet() {\n        this.balance = 5438.8;\n        this.walletAddress = generateWalletAddress();\n    }\n\n    private String generateWalletAddress() {\n        // Code to generate a unique wallet address\n        return "UniqueWalletAddress123";\n    }\n\n    public void sendBitcoin(double amount) {\n        // Code to send Bitcoin\n        System.out.println("Sending " + amount + " Bitcoin");\n    }\n\n    public void receiveBitcoin() {\n        // Code to receive Bitcoin\n        System.out.println("Received Bitcoin");\n    }\n\n    public void mineBitcoin() {\n        // Code for Bitcoin mining\n        System.out.println("Mining Bitcoin");\n    }\n\n    public static void main(String[] args) {\n        BitcoinWallet wallet = new BitcoinWallet();\n        System.out.println("Wallet Address: " + wallet.walletAddress);\n        wallet.sendBitcoin(1.0);\n        wallet.receiveBitcoin();\n        wallet.mineBitcoin();\n        wallet.exchangeBitcoinBitcoin();\n        wallet.convertBitcoinBitcoin();\n    }\n}\n`,
+
+      "README.md": `# BitcoinWallet\n\nThis is a demo webpage that previews a Java file (BitcoinWallet.java).\n\n- Click files in the left sidebar to switch between them.\n- Use "Copy Code" to copy the currently visible file to clipboard.\n- Use "Download File" to download the currently visible file as a .java or .md file.\n`,
+
+      "styles.css": `/* This is a small companion stylesheet that would style a standalone page. \n   The main demo embeds styles inside the HTML for convenience. */\nbody { font-family: Inter, sans-serif; }\n` };
+
+    // Utilities: syntax highlight (simple, not a full parser)
+    function highlightJava(src){
+      // Escape HTML
+      const esc = src.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      // very small regex-based highlighting: keywords, strings, comments, numbers, classnames
+      return esc
+        .replace(/(\/\/.*?$)/gm, '<span class="cm">$1</span>')
+        .replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="cm">$1</span>')
+        .replace(/\b(public|private|protected|static|void|new|return|class|int|double|String|this|private|public|static)\b/g, '<span class="kw">$1</span>')
+        .replace(/\b([A-Z][A-Za-z0-9_]*)\b/g, '<span class="cn">$1</span>')
+        .replace(/(\".*?\")/g, '<span class="st">$1</span>')
+        .replace(/(\b[0-9]+(?:\.[0-9]+)?\b)/g, '<span class="nm">$1</span>');
+    }
+
+    const codePane = document.getElementById('codePane');
+    const linesEl = document.getElementById('lines');
+    const filesList = document.getElementById('filesList');
+    let currentFile = 'BitcoinWallet.java';
+    let showLines = true;
+
+    function renderFile(name){
+      currentFile = name;
+      // update active file
+      Array.from(filesList.children).forEach(el=>el.classList.toggle('active', el.dataset.filename===name));
+      const content = files[name] || '';
+      const highlighted = name.endsWith('.java') ? highlightJava(content) : ('<pre>'+escapeHtml(content)+'</pre>');
+      codePane.innerHTML = '<pre>'+highlighted+'</pre>';
+      updateLines(content);
+    }
+
+    function updateLines(text){
+      const count = text.split('\n').length;
+      if(!showLines){ linesEl.style.display='none'; return; }
+      linesEl.style.display='block';
+      let out='';
+      for(let i=1;i<=count;i++) out += i + '\n';
+      linesEl.textContent = out;
+    }
+
+    function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // File click
+    filesList.addEventListener('click', e=>{
+      const f = e.target.closest('.file'); if(!f) return; renderFile(f.dataset.filename);
+    });
+
+    // Copy to clipboard
+    document.getElementById('copyBtn').addEventListener('click', async ()=>{
+      const raw = files[currentFile];
+      try{ await navigator.clipboard.writeText(raw); alert('Copied '+currentFile+' to clipboard'); }
+      catch(e){ alert('Copy failed — your browser may block clipboard access'); }
+    });
+
+    // Download file
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const blob = new Blob([files[currentFile]], {type: 'text/plain;charset=utf-8'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = currentFile;
+      document.body.appendChild(a); a.click(); a.remove();
+    });
+
+    // Toggle theme
+    document.getElementById('toggleTheme').addEventListener('click', ()=>{
+      const root = document.body;
+      const theme = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', theme);
+    });
+
+    // Show line numbers toggle
+    document.getElementById('showLineNums').addEventListener('click', ()=>{ showLines = !showLines; updateLines(files[currentFile]); });
+
+    // Minify (very naive: strip // comments and block comments)
+    document.getElementById('minifyBtn').addEventListener('click', ()=>{
+      let s = files[currentFile];
+      s = s.replace(/\/\/.*$/gm, '');
+      s = s.replace(/\/\*[\s\S]*?\*\//g, '');
+      alert('Comments removed in preview (the underlying file is not changed)');
+      codePane.innerHTML = '<pre>'+escapeHtml(s)+'</pre>';
+      updateLines(s);
+    });
+
+    // initial render
+    renderFile(currentFile);
+
+    // small accessibility: focus editor to allow quick copy shortcuts
+    codePane.addEventListener('keydown', (e)=>{ if(e.ctrlKey && e.key==='c'){ document.getElementById('copyBtn').click(); }});
+
+  </script>
+</body>
+</html>
